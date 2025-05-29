@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
+import type { Language } from '../constants/translations';
 
-const Hero: React.FC = () => {
+interface HeroProps {
+  t: {
+    title: string;
+    subtitle: string;
+    tryDemo: string;
+    learnMore: string;
+  };
+}
+
+const Hero: React.FC<HeroProps> = ({ t }) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    // Trigger animations after component mounts
     const timer = setTimeout(() => {
       setIsLoaded(true);
     }, 100);
@@ -15,7 +24,6 @@ const Hero: React.FC = () => {
 
   return (
     <section className="min-h-screen flex items-center pt-16 pb-8 bg-gradient-to-b from-gray-950 to-gray-900 overflow-hidden relative">
-      {/* Animated decorative elements */}
       <div
         className={`absolute top-1/4 -left-20 w-64 h-64 bg-purple-600/20 rounded-full filter blur-3xl transition-all duration-1500 ease-out ${
           isLoaded
@@ -33,9 +41,7 @@ const Hero: React.FC = () => {
 
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col lg:flex-row items-center gap-12">
-          {/* Text Content */}
           <div className="flex-1 text-center lg:text-left max-w-2xl mx-auto lg:mx-0 z-10">
-            {/* Main heading */}
             <h1
               className={`text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight transform transition-all duration-1000 ease-out ${
                 isLoaded
@@ -43,7 +49,7 @@ const Hero: React.FC = () => {
                   : 'translate-y-12 opacity-0'
               }`}
             >
-              Control Your Shopping Budget With
+              {t.title}
               <span
                 className={`bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 inline-block transform transition-all duration-1200 ease-out delay-300 ${
                   isLoaded
@@ -56,7 +62,6 @@ const Hero: React.FC = () => {
               </span>
             </h1>
 
-            {/* Description */}
             <p
               className={`text-gray-300 text-lg md:text-xl mb-8 leading-relaxed transform transition-all duration-1000 ease-out delay-500 ${
                 isLoaded
@@ -64,12 +69,9 @@ const Hero: React.FC = () => {
                   : 'translate-y-10 opacity-0'
               }`}
             >
-              VoiceCart adalah solusi ringan berbasis web yang membantu Anda
-              melacak pengeluaran belanja secara real-time hanya dengan
-              suara—tanpa perlu instalasi, login, atau input manual.
+              {t.subtitle}
             </p>
 
-            {/* Buttons */}
             <div
               className={`flex flex-col sm:flex-row gap-4 justify-center lg:justify-start transform transition-all duration-1000 ease-out delay-700 ${
                 isLoaded
@@ -90,7 +92,7 @@ const Hero: React.FC = () => {
                 }`}
                 style={{ transitionDelay: isLoaded ? '800ms' : '0ms' }}
               >
-                Coba Demo Sekarang
+                {t.tryDemo}
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
               </button>
 
@@ -107,12 +109,11 @@ const Hero: React.FC = () => {
                 }`}
                 style={{ transitionDelay: isLoaded ? '900ms' : '0ms' }}
               >
-                Pelajari Lebih Lanjut
+                {t.learnMore}
               </button>
             </div>
           </div>
 
-          {/* Enhanced SVG Image Section with Smooth Animations */}
           <div
             className={`flex-1 relative z-10 max-w-[400px] mx-auto lg:mx-0 transform transition-all duration-1200 ease-out delay-1000 ${
               isLoaded
@@ -120,9 +121,7 @@ const Hero: React.FC = () => {
                 : 'translate-y-12 opacity-0 scale-90'
             }`}
           >
-            {/* Main SVG container with smooth animations */}
             <div className="relative group svg-container">
-              {/* SVG with multiple smooth animation layers */}
               <div className="svg-smooth-float">
                 <div className="svg-gentle-rotate">
                   <img
@@ -141,11 +140,9 @@ const Hero: React.FC = () => {
                 </div>
               </div>
 
-              {/* Smooth gradient glow */}
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/15 via-purple-500/10 to-cyan-500/15 rounded-2xl blur-2xl opacity-0 group-hover:opacity-80 transition-all duration-1000 -z-10 scale-110 smooth-glow"></div>
             </div>
 
-            {/* Smooth floating decorative elements */}
             <div
               className={`absolute -top-6 -right-6 w-8 h-8 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full transition-all duration-1500 delay-1200 smooth-orbit-1 ${
                 isLoaded ? 'opacity-60' : 'opacity-0'
@@ -166,7 +163,6 @@ const Hero: React.FC = () => {
       </div>
 
       <style jsx>{`
-        /* Performance optimizations */
         .svg-container {
           will-change: transform, opacity;
           transform: translateZ(0);
@@ -180,24 +176,20 @@ const Hero: React.FC = () => {
           transform: translateZ(0);
         }
         
-        /* Main smooth floating animation */
         .svg-smooth-float {
           animation: smoothFloat 8s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
           transform-origin: center center;
         }
         
-        /* Gentle rotation animation */
         .svg-gentle-rotate {
           animation: gentleRotate 16s cubic-bezier(0.4, 0, 0.6, 1) infinite;
           transform-style: preserve-3d;
         }
         
-        /* Smooth glow pulse */
         .smooth-glow {
           animation: smoothGlowPulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite alternate;
         }
         
-        /* Smooth orbital animations for decorative elements */
         .smooth-orbit-1 {
           animation: smoothOrbit1 12s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
         }
@@ -210,7 +202,6 @@ const Hero: React.FC = () => {
           animation: smoothOrbit3 14s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
         }
         
-        /* Keyframe Definitions with Smooth Transitions */
         @keyframes smoothFloat {
           0%, 100% {
             transform: translateY(0px) translateX(0px) scale(1);
@@ -318,7 +309,6 @@ const Hero: React.FC = () => {
           }
         }
         
-        /* Hover pause effects for better UX */
         .svg-container:hover .svg-smooth-float {
           animation-play-state: paused;
         }
@@ -327,7 +317,6 @@ const Hero: React.FC = () => {
           animation-play-state: paused;
         }
         
-        /* Accessibility: Respect reduced motion preference */
         @media (prefers-reduced-motion: reduce) {
           .svg-smooth-float,
           .svg-gentle-rotate,
@@ -341,7 +330,6 @@ const Hero: React.FC = () => {
           }
         }
         
-        /* Anti-aliasing and smoothness improvements */
         .svg-main {
           image-rendering: -webkit-optimize-contrast;
           image-rendering: crisp-edges;
@@ -350,7 +338,6 @@ const Hero: React.FC = () => {
           transform: translateZ(0);
         }
         
-        /* Smooth transitions on all animated elements */
         .svg-container * {
           transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
