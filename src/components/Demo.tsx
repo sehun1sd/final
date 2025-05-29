@@ -107,7 +107,7 @@ const Demo: React.FC = () => {
   return (
     <section
       id="demo"
-      className="min-h-screen py-12 bg-gradient-to-br from-gray-950 via-gray-900 to-purple-950 relative overflow-hidden"
+      className="min-h-screen py-12 bg-gradient-to-b from-gray-900 via-gray-950 to-purple-950/50 relative overflow-hidden"
     >
       <BackgroundDecorations />
 
