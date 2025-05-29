@@ -110,7 +110,7 @@ const Features: React.FC = () => {
     <section
       ref={sectionRef}
       id="features"
-      className="py-20 bg-gray-950 relative overflow-hidden"
+      className="py-20 bg-gradient-to-b from-gray-900 via-gray-950 to-gray-900 relative overflow-hidden"
     >
       {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-gray-900 to-transparent"></div>
