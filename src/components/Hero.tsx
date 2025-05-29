@@ -112,52 +112,53 @@ const Hero: React.FC = () => {
             </div>
           </div>
 
-          {/* SVG Image Section */}
+          {/* Enhanced SVG Image Section with Smooth Animations */}
           <div
-            className={`flex-1 relative z-10 max-w-[400px] mx-auto lg:mx-0 transform transition-all duration-1000 ease-out delay-1000 ${
+            className={`flex-1 relative z-10 max-w-[400px] mx-auto lg:mx-0 transform transition-all duration-1200 ease-out delay-1000 ${
               isLoaded
                 ? 'translate-y-0 opacity-100 scale-100'
-                : 'translate-y-8 opacity-0 scale-90'
+                : 'translate-y-12 opacity-0 scale-90'
             }`}
           >
-            {/* Main SVG container with hover effects */}
-            <div className="relative group">
-              <img
-                src="/src/images/person-rocket.svg"
-                alt="Smart shopping with voice technology"
-                className={`w-full h-auto max-w-full transition-all duration-700 ease-out group-hover:scale-105 group-hover:-translate-y-2 floating ${
-                  isLoaded ? 'opacity-100' : 'opacity-0'
-                }`}
-                style={{
-                  filter: 'drop-shadow(0 10px 30px rgba(139, 92, 246, 0.3))',
-                  transition: 'all 0.7s ease-out',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.filter =
-                    'drop-shadow(0 15px 40px rgba(139, 92, 246, 0.5))';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.filter =
-                    'drop-shadow(0 10px 30px rgba(139, 92, 246, 0.3))';
-                }}
-              />
+            {/* Main SVG container with smooth animations */}
+            <div className="relative group svg-container">
+              {/* SVG with multiple smooth animation layers */}
+              <div className="svg-smooth-float">
+                <div className="svg-gentle-rotate">
+                  <img
+                    src="/src/images/person-rocket.svg"
+                    alt="Smart shopping with voice technology"
+                    className={`w-full h-auto max-w-full transition-all duration-700 ease-out group-hover:scale-105 svg-main ${
+                      isLoaded ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    style={{
+                      filter:
+                        'drop-shadow(0 20px 60px rgba(139, 92, 246, 0.25))',
+                      imageRendering: 'crisp-edges',
+                      WebkitFontSmoothing: 'antialiased',
+                    }}
+                  />
+                </div>
+              </div>
 
-              {/* Gradient shimmer overlay */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none shimmer"></div>
-
-              {/* Subtle glow effect behind image */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/10 to-cyan-500/20 rounded-lg blur-xl opacity-0 group-hover:opacity-60 transition-all duration-700 -z-10 scale-110"></div>
+              {/* Smooth gradient glow */}
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/15 via-purple-500/10 to-cyan-500/15 rounded-2xl blur-2xl opacity-0 group-hover:opacity-80 transition-all duration-1000 -z-10 scale-110 smooth-glow"></div>
             </div>
 
-            {/* Floating decorative elements */}
+            {/* Smooth floating decorative elements */}
             <div
-              className={`absolute -top-4 -right-4 w-6 h-6 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full transition-all duration-1500 delay-1200 floating-delayed ${
-                isLoaded ? 'opacity-70' : 'opacity-0'
+              className={`absolute -top-6 -right-6 w-8 h-8 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full transition-all duration-1500 delay-1200 smooth-orbit-1 ${
+                isLoaded ? 'opacity-60' : 'opacity-0'
               }`}
             ></div>
             <div
-              className={`absolute -bottom-6 -left-6 w-4 h-4 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full transition-all duration-1500 delay-1400 floating-slow ${
-                isLoaded ? 'opacity-50' : 'opacity-0'
+              className={`absolute -bottom-8 -left-8 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full transition-all duration-1500 delay-1400 smooth-orbit-2 ${
+                isLoaded ? 'opacity-45' : 'opacity-0'
+              }`}
+            ></div>
+            <div
+              className={`absolute top-1/3 -left-10 w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full transition-all duration-1500 delay-1600 smooth-orbit-3 ${
+                isLoaded ? 'opacity-35' : 'opacity-0'
               }`}
             ></div>
           </div>
@@ -165,34 +166,194 @@ const Hero: React.FC = () => {
       </div>
 
       <style jsx>{`
-        @keyframes float {
+        /* Performance optimizations */
+        .svg-container {
+          will-change: transform, opacity;
+          transform: translateZ(0);
+          backface-visibility: hidden;
+        }
+        
+        .svg-smooth-float,
+        .svg-gentle-rotate {
+          will-change: transform;
+          backface-visibility: hidden;
+          transform: translateZ(0);
+        }
+        
+        /* Main smooth floating animation */
+        .svg-smooth-float {
+          animation: smoothFloat 8s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+          transform-origin: center center;
+        }
+        
+        /* Gentle rotation animation */
+        .svg-gentle-rotate {
+          animation: gentleRotate 16s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+          transform-style: preserve-3d;
+        }
+        
+        /* Smooth glow pulse */
+        .smooth-glow {
+          animation: smoothGlowPulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite alternate;
+        }
+        
+        /* Smooth orbital animations for decorative elements */
+        .smooth-orbit-1 {
+          animation: smoothOrbit1 12s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+        }
+        
+        .smooth-orbit-2 {
+          animation: smoothOrbit2 10s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        .smooth-orbit-3 {
+          animation: smoothOrbit3 14s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+        }
+        
+        /* Keyframe Definitions with Smooth Transitions */
+        @keyframes smoothFloat {
           0%, 100% {
-            transform: translateY(0px);
+            transform: translateY(0px) translateX(0px) scale(1);
+          }
+          25% {
+            transform: translateY(-12px) translateX(3px) scale(1.01);
           }
           50% {
-            transform: translateY(-10px);
+            transform: translateY(-18px) translateX(0px) scale(1.02);
+          }
+          75% {
+            transform: translateY(-8px) translateX(-3px) scale(1.01);
           }
         }
         
-        @keyframes floatDelayed {
-          0%, 100% {
-            transform: translateY(0px) scale(1);
+        @keyframes gentleRotate {
+          0% {
+            transform: rotateY(0deg) rotateZ(0deg) rotateX(0deg);
+          }
+          25% {
+            transform: rotateY(2deg) rotateZ(1deg) rotateX(0.5deg);
           }
           50% {
-            transform: translateY(-8px) scale(1.05);
+            transform: rotateY(0deg) rotateZ(-1deg) rotateX(-0.5deg);
+          }
+          75% {
+            transform: rotateY(-2deg) rotateZ(0deg) rotateX(0.5deg);
+          }
+          100% {
+            transform: rotateY(0deg) rotateZ(0deg) rotateX(0deg);
           }
         }
         
-        @keyframes floatSlow {
-          0%, 100% {
-            transform: translateY(0px);
+        @keyframes smoothGlowPulse {
+          0% {
+            opacity: 0;
+            transform: scale(110%) rotate(0deg);
           }
           50% {
-            transform: translateY(-6px);
+            opacity: 0.4;
+            transform: scale(120%) rotate(1deg);
+          }
+          100% {
+            opacity: 0.2;
+            transform: scale(125%) rotate(0deg);
           }
         }
         
+        @keyframes smoothShimmer {
+          0% {
+            transform: translateX(-100%) skewX(-15deg);
+            opacity: 0;
+          }
+          50% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateX(100%) skewX(-15deg);
+            opacity: 0;
+          }
+        }
         
+        @keyframes smoothOrbit1 {
+          0%, 100% {
+            transform: translate(0px, 0px) rotate(0deg) scale(1);
+          }
+          25% {
+            transform: translate(6px, -12px) rotate(90deg) scale(1.1);
+          }
+          50% {
+            transform: translate(0px, -16px) rotate(180deg) scale(1.2);
+          }
+          75% {
+            transform: translate(-6px, -8px) rotate(270deg) scale(1.1);
+          }
+        }
+        
+        @keyframes smoothOrbit2 {
+          0%, 100% {
+            transform: translate(0px, 0px) rotate(0deg) scale(1);
+          }
+          33% {
+            transform: translate(-8px, 4px) rotate(120deg) scale(0.9);
+          }
+          66% {
+            transform: translate(4px, -8px) rotate(240deg) scale(1.1);
+          }
+        }
+        
+        @keyframes smoothOrbit3 {
+          0%, 100% {
+            transform: translate(0px, 0px) rotate(0deg) scale(1);
+          }
+          20% {
+            transform: translate(8px, -6px) rotate(72deg) scale(1.2);
+          }
+          40% {
+            transform: translate(2px, -12px) rotate(144deg) scale(0.8);
+          }
+          60% {
+            transform: translate(-6px, -8px) rotate(216deg) scale(1.1);
+          }
+          80% {
+            transform: translate(-4px, 2px) rotate(288deg) scale(0.9);
+          }
+        }
+        
+        /* Hover pause effects for better UX */
+        .svg-container:hover .svg-smooth-float {
+          animation-play-state: paused;
+        }
+        
+        .svg-container:hover .svg-gentle-rotate {
+          animation-play-state: paused;
+        }
+        
+        /* Accessibility: Respect reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+          .svg-smooth-float,
+          .svg-gentle-rotate,
+          .smooth-orbit-1,
+          .smooth-orbit-2,
+          .smooth-orbit-3,
+          .smooth-glow,
+          .smooth-shimmer {
+            animation-duration: 30s;
+            animation-timing-function: linear;
+          }
+        }
+        
+        /* Anti-aliasing and smoothness improvements */
+        .svg-main {
+          image-rendering: -webkit-optimize-contrast;
+          image-rendering: crisp-edges;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          transform: translateZ(0);
+        }
+        
+        /* Smooth transitions on all animated elements */
+        .svg-container * {
+          transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
       `}</style>
     </section>
   );
