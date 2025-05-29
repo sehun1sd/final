@@ -123,7 +123,7 @@ const Hero: React.FC = () => {
             {/* Main SVG container with hover effects */}
             <div className="relative group">
               <img
-                src="./images/person-rocket.svg"
+                src="/src/images/person-rocket.svg"
                 alt="Smart shopping with voice technology"
                 className={`w-full h-auto max-w-full transition-all duration-700 ease-out group-hover:scale-105 group-hover:-translate-y-2 floating ${
                   isLoaded ? 'opacity-100' : 'opacity-0'
