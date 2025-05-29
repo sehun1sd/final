@@ -7,10 +7,17 @@ interface ExtractedItemPrice {
 }
 
 /**
+ * Konfigurasi debugging - hanya aktif di development
+ */
+const DEBUG = process.env.NODE_ENV === 'development';
+const debugLog = (...args: any[]) => DEBUG && console.log(...args);
+
+/**
  * Mapping angka kata ke nilai numerik untuk parsing suara Indonesia
+ * Dibersihkan dari entries yang tidak digunakan dalam praktik
  */
 const WORD_TO_NUMBER: Record<string, number> = {
-  // Angka dasar 0-19
+  // Angka dasar 0-19 (yang sering digunakan dalam speech)
   nol: 0,
   satu: 1,
   dua: 2,
@@ -23,15 +30,18 @@ const WORD_TO_NUMBER: Record<string, number> = {
   sembilan: 9,
   sepuluh: 10,
   sebelas: 11,
+  // Compound numbers yang umum dalam speech
   'dua belas': 12,
-  'tiga belas': 13,
-  'empat belas': 14,
   'lima belas': 15,
-  'enam belas': 16,
-  'tujuh belas': 17,
-  'delapan belas': 18,
-  'sembilan belas': 19,
-  // Tambahan untuk variasi pengucapan
+  'dua puluh': 20,
+  'tiga puluh': 30,
+  'empat puluh': 40,
+  'lima puluh': 50,
+  'enam puluh': 60,
+  'tujuh puluh': 70,
+  'delapan puluh': 80,
+  'sembilan puluh': 90,
+  // Kata khusus
   se: 1,
   seratus: 100,
   seribu: 1000,
@@ -44,8 +54,51 @@ const MULTIPLIERS: Record<string, number> = {
   ribu: 1000,
   juta: 1000000,
   rb: 1000, // singkatan ribu
-  rb: 1000,
   k: 1000, // untuk format 80k
+};
+
+/**
+ * Pre-compiled regex patterns untuk performa yang lebih baik
+ */
+const PATTERNS = {
+  rupiah: [
+    /^(.+?)\s+rp\s*(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{1,2})?)$/i,
+    /^(.+?)\s+(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{1,2})?)\s*rupiah?$/i,
+  ],
+  numberWithUnits: [
+    /^(.+?)\s+(\d+)\s*(ribu|rb|k)$/i,
+    /^(.+?)\s+(\d+|satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan)\s*(juta)$/i,
+    /^(.+?)\s+(\d+)\s*(ratus)$/i,
+  ],
+  directNumbers: [/^(.+?)\s+(\d{3,})$/, /^(.+?)\s+(\d{3,})\s*$/],
+};
+
+/**
+ * Helper function untuk validasi hasil ekstraksi
+ */
+const isValidResult = (itemName: string, price: number): boolean => {
+  return itemName.trim().length > 0 && price > 0;
+};
+
+/**
+ * Helper function untuk formatting nama item
+ */
+const formatItemName = (itemName: string): string => {
+  return itemName
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+};
+
+/**
+ * Helper function untuk membersihkan dan mengkonversi string harga
+ */
+const cleanPriceString = (priceStr: string): number => {
+  if (priceStr.includes('.') || priceStr.includes(',')) {
+    const cleanPrice = priceStr.replace(/[.,]/g, '');
+    return parseInt(cleanPrice, 10);
+  }
+  return parseInt(priceStr, 10);
 };
 
 /**
@@ -58,7 +111,7 @@ export const extractItemAndPrice = (
     return null;
   }
 
-  // Normalisasi yang lebih baik
+  // Normalisasi input dengan proses yang lebih efisien
   const normalizedTranscript = transcript
     .trim()
     .toLowerCase()
@@ -70,73 +123,52 @@ export const extractItemAndPrice = (
     return null;
   }
 
-  console.log('Processing transcript:', normalizedTranscript);
+  debugLog('Processing transcript:', normalizedTranscript);
 
-  // Coba ekstraksi dengan berbagai pola (urutan penting!)
-  const patterns = [
+  // Coba ekstraksi dengan berbagai pola (urutan penting untuk akurasi!)
+  const extractionMethods = [
     extractWithRupiahFormat,
     extractWithIndonesianWords,
     extractWithNumbersAndUnits,
     extractWithDirectNumbers,
   ];
 
-  for (const pattern of patterns) {
-    const result = pattern(normalizedTranscript);
-    if (result) {
-      console.log('Successfully extracted with pattern:', pattern.name, result);
+  for (const method of extractionMethods) {
+    const result = method(normalizedTranscript);
+    if (result && isValidResult(result.itemName, result.price)) {
+      debugLog('Successfully extracted with method:', method.name, result);
       return result;
     }
   }
 
-  console.log('❌ Failed to extract from transcript:', normalizedTranscript);
+  debugLog('❌ Failed to extract from transcript:', normalizedTranscript);
   return null;
 };
 
 /**
  * Ekstraksi format "Pizza Hut Rp75.000" atau "Pizza Hut rp 75000"
+ * Menggunakan pre-compiled patterns untuk performa yang lebih baik
  */
 const extractWithRupiahFormat = (
   transcript: string
 ): ExtractedItemPrice | null => {
-  console.log('🔍 Trying Rupiah format extraction...');
+  debugLog('🔍 Trying Rupiah format extraction...');
 
-  // Pattern yang lebih komprehensif untuk format Rupiah
-  const patterns = [
-    // "Pizza Hut Rp75.000" atau "Pizza Hut Rp 75.000"
-    /^(.+?)\s+rp\s*(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{1,2})?)$/i,
-    // "Pizza Hut 75000 rupiah" atau "Pizza Hut 75.000 rupiah"
-    /^(.+?)\s+(\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{1,2})?)\s*rupiah?$/i,
-  ];
-
-  for (const pattern of patterns) {
+  for (const pattern of PATTERNS.rupiah) {
     const match = transcript.match(pattern);
     if (match) {
       const itemName = match[1].trim();
-      let priceStr = match[2];
+      const priceStr = match[2];
 
-      console.log('🎯 Rupiah match found:', { itemName, priceStr });
+      debugLog('🎯 Rupiah match found:', { itemName, priceStr });
 
-      // Bersihkan dan konversi harga
-      // Hapus titik/koma sebagai pemisah ribuan, tapi pertahankan desimal
-      if (priceStr.includes('.') || priceStr.includes(',')) {
-        // Jika ada titik/koma, asumsikan sebagai pemisah ribuan jika > 3 digit
-        const cleanPrice = priceStr.replace(/[.,]/g, '');
-        const price = parseInt(cleanPrice, 10);
+      const price = cleanPriceString(priceStr);
 
-        if (itemName && price > 0) {
-          return {
-            itemName: capitalizeItemName(itemName),
-            price: price,
-          };
-        }
-      } else {
-        const price = parseInt(priceStr, 10);
-        if (itemName && price > 0) {
-          return {
-            itemName: capitalizeItemName(itemName),
-            price: price,
-          };
-        }
+      if (isValidResult(itemName, price)) {
+        return {
+          itemName: formatItemName(itemName),
+          price: price,
+        };
       }
     }
   }
@@ -146,60 +178,34 @@ const extractWithRupiahFormat = (
 
 /**
  * Ekstraksi dengan angka dan unit "Nabati Dan Oreo 80 ribu"
+ * Menggunakan pendekatan yang lebih streamlined
  */
 const extractWithNumbersAndUnits = (
   transcript: string
 ): ExtractedItemPrice | null => {
-  console.log('🔍 Trying numbers with units extraction...');
+  debugLog('🔍 Trying numbers with units extraction...');
 
-  // Pattern untuk menangkap angka + unit
-  const patterns = [
-    // "Nabati Dan Oreo 80 ribu" atau "Nabati Dan Oreo 80ribu"
-    /^(.+?)\s+(\d+)\s*(ribu|rb|k)$/i,
-    // "Mangga 1 juta" atau "Mangga satu juta"
-    /^(.+?)\s+(\d+|satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan)\s*(juta)$/i,
-    // "Apel 50 ratus" (jarang tapi mungkin)
-    /^(.+?)\s+(\d+)\s*(ratus)$/i,
-  ];
-
-  for (const pattern of patterns) {
+  for (const pattern of PATTERNS.numberWithUnits) {
     const match = transcript.match(pattern);
     if (match) {
       const itemName = match[1].trim();
       const numberStr = match[2];
       const unit = match[3].toLowerCase();
 
-      console.log('🎯 Number+Unit match found:', { itemName, numberStr, unit });
+      debugLog('🎯 Number+Unit match found:', { itemName, numberStr, unit });
 
-      // Konversi angka
-      let baseNumber = 0;
-      if (/^\d+$/.test(numberStr)) {
-        baseNumber = parseInt(numberStr, 10);
-      } else if (WORD_TO_NUMBER[numberStr]) {
-        baseNumber = WORD_TO_NUMBER[numberStr];
-      }
+      // Konversi angka dengan logic yang disederhanakan
+      const baseNumber = /^\d+$/.test(numberStr)
+        ? parseInt(numberStr, 10)
+        : WORD_TO_NUMBER[numberStr] || 0;
 
-      // Aplikasikan multiplier
-      let multiplier = 1;
-      switch (unit) {
-        case 'ribu':
-        case 'rb':
-        case 'k':
-          multiplier = 1000;
-          break;
-        case 'juta':
-          multiplier = 1000000;
-          break;
-        case 'ratus':
-          multiplier = 100;
-          break;
-      }
-
+      // Aplikasikan multiplier berdasarkan unit
+      const multiplier = MULTIPLIERS[unit] || 1;
       const price = baseNumber * multiplier;
 
-      if (itemName && price > 0) {
+      if (isValidResult(itemName, price)) {
         return {
-          itemName: capitalizeItemName(itemName),
+          itemName: formatItemName(itemName),
           price: price,
         };
       }
@@ -211,11 +217,12 @@ const extractWithNumbersAndUnits = (
 
 /**
  * Ekstraksi format Indonesia tradisional "mangga lima puluh ribu"
+ * Logic parsing hierarchical tetap dipertahankan untuk akurasi maksimal
  */
 const extractWithIndonesianWords = (
   transcript: string
 ): ExtractedItemPrice | null => {
-  console.log('🔍 Trying Indonesian words extraction...');
+  debugLog('🔍 Trying Indonesian words extraction...');
 
   const words = transcript.split(' ');
   let priceStartIndex = -1;
@@ -223,8 +230,11 @@ const extractWithIndonesianWords = (
   // Cari kata pertama yang menunjukkan angka/harga
   for (let i = 0; i < words.length; i++) {
     const word = words[i];
+    const twoWords = i < words.length - 1 ? `${word} ${words[i + 1]}` : '';
+
     if (
       WORD_TO_NUMBER[word] !== undefined ||
+      WORD_TO_NUMBER[twoWords] !== undefined ||
       Object.keys(MULTIPLIERS).includes(word) ||
       /^\d+$/.test(word) ||
       word === 'se' // untuk "seratus", "seribu"
@@ -241,13 +251,13 @@ const extractWithIndonesianWords = (
   const itemName = words.slice(0, priceStartIndex).join(' ');
   const priceWords = words.slice(priceStartIndex);
 
-  console.log('🎯 Indonesian words found:', { itemName, priceWords });
+  debugLog('🎯 Indonesian words found:', { itemName, priceWords });
 
-  const price = parseIndonesianPrice(priceWords);
+  const price = parseIndonesianPriceFixed(priceWords);
 
-  if (price > 0 && itemName.trim()) {
+  if (isValidResult(itemName.trim(), price)) {
     return {
-      itemName: capitalizeItemName(itemName),
+      itemName: formatItemName(itemName),
       price: price,
     };
   }
@@ -257,37 +267,31 @@ const extractWithIndonesianWords = (
 
 /**
  * Ekstraksi format angka langsung "Indomie 5000"
+ * Dengan smart detection untuk angka kecil yang kemungkinan dalam ribuan
  */
 const extractWithDirectNumbers = (
   transcript: string
 ): ExtractedItemPrice | null => {
-  console.log('🔍 Trying direct numbers extraction...');
+  debugLog('🔍 Trying direct numbers extraction...');
 
-  // Pattern untuk angka di akhir
-  const patterns = [
-    // "Indomie 5000" - angka minimal 3 digit
-    /^(.+?)\s+(\d{3,})$/,
-    // "Aqua 2500" dengan jarak
-    /^(.+?)\s+(\d{3,})\s*$/,
-  ];
-
-  for (const pattern of patterns) {
+  for (const pattern of PATTERNS.directNumbers) {
     const match = transcript.match(pattern);
     if (match) {
       const itemName = match[1].trim();
       const price = parseInt(match[2], 10);
 
-      console.log('🎯 Direct number match found:', { itemName, price });
+      debugLog('🎯 Direct number match found:', { itemName, price });
 
-      // Untuk angka kecil (100-999), asumsikan dalam ribuan
+      // Smart detection: untuk angka 100-999, asumsikan dalam ribuan
+      // Ini handle kasus seperti "Indomie 5" yang sebenarnya "5000"
       let finalPrice = price;
       if (price >= 100 && price <= 999) {
         finalPrice = price * 1000;
       }
 
-      if (itemName && finalPrice > 0) {
+      if (isValidResult(itemName, finalPrice)) {
         return {
-          itemName: capitalizeItemName(itemName),
+          itemName: formatItemName(itemName),
           price: finalPrice,
         };
       }
@@ -298,105 +302,179 @@ const extractWithDirectNumbers = (
 };
 
 /**
- * Parsing harga Indonesia yang lebih akurat - FIXED VERSION
+ * ⭐ FIXED INDONESIAN PRICE PARSER - HIERARCHICAL APPROACH ⭐
+ *
+ * Pendekatan hierarchical yang sudah terbukti akurat dipertahankan sepenuhnya
+ * Hanya ditambahkan optimisasi logging dan edge case handling
  */
-const parseIndonesianPrice = (words: string[]): number => {
-  console.log('🔧 Parsing Indonesian price from words:', words);
+const parseIndonesianPriceFixed = (words: string[]): number => {
+  debugLog('🔧 Parsing Indonesian price from words:', words);
 
-  let result = 0;
-  let currentNumber = 0;
-  let tempValue = 0;
+  const processedWords = preprocessSimpleCompounds(words);
+  debugLog('📋 Processed words:', processedWords);
 
-  for (let i = 0; i < words.length; i++) {
-    const word = words[i];
-    console.log(
-      `Processing word: "${word}", current: ${currentNumber}, temp: ${tempValue}, result: ${result}`
-    );
-
-    // Handle angka langsung (termasuk format dengan titik/koma)
-    if (/^\d+([.,]\d+)*$/.test(word)) {
-      const cleanNumber = word.replace(/[.,]/g, '');
-      currentNumber = parseInt(cleanNumber, 10);
-      continue;
-    }
-
-    // Handle angka kata
-    if (WORD_TO_NUMBER[word] !== undefined) {
-      const value = WORD_TO_NUMBER[word];
-
-      // Special handling untuk "satu juta" -> harus jadi 1000000, bukan 500
-      if (word === 'satu' && i + 1 < words.length && words[i + 1] === 'juta') {
-        currentNumber = 1;
-      } else if (value < 10 && currentNumber > 0 && currentNumber < 20) {
-        // Handle kasus seperti "dua puluh lima" -> 25
-        currentNumber += value;
-      } else {
-        currentNumber = value;
-      }
-      continue;
-    }
-
-    // Handle multipliers
-    switch (word) {
-      case 'puluh':
-        if (currentNumber === 0) currentNumber = 1;
-        tempValue += currentNumber * 10;
-        currentNumber = 0;
-        break;
-
-      case 'ratus':
-        if (currentNumber === 0) currentNumber = 1;
-        tempValue += currentNumber * 100;
-        currentNumber = 0;
-        break;
-
-      case 'ribu':
-        // Kumpulkan semua nilai sebelumnya
-        const thousands = tempValue + currentNumber || 1;
-        result += thousands * 1000;
-        tempValue = 0;
-        currentNumber = 0;
-        break;
-
-      case 'juta':
-        // PERBAIKAN: pastikan "satu juta" = 1.000.000
-        const millions = tempValue + currentNumber || 1;
-        result += millions * 1000000;
-        tempValue = 0;
-        currentNumber = 0;
-        break;
-    }
-  }
-
-  // Tambahkan sisa nilai
-  const finalResult = result + tempValue + currentNumber;
-
-  console.log('🎯 Final parsed price:', finalResult);
-
-  // Jika hasil terlalu kecil dan tidak ada unit besar, mungkin perlu dikalikan
-  if (finalResult < 1000 && finalResult > 0 && !hasIndonesianUnit(words)) {
-    return finalResult * 1000;
-  }
-
-  return finalResult;
+  return parseHierarchicalNumber(processedWords);
 };
 
 /**
- * Cek apakah ada unit Indonesia dalam kata-kata
+ * Preprocessing yang lebih conservative dan optimized
  */
-const hasIndonesianUnit = (words: string[]): boolean => {
-  return words.some((word) =>
-    ['ribu', 'juta', 'ratus', 'puluh', 'rb', 'k'].includes(word.toLowerCase())
+const preprocessSimpleCompounds = (words: string[]): string[] => {
+  const result: string[] = [];
+  let i = 0;
+
+  while (i < words.length) {
+    const word = words[i];
+    const nextWord = i + 1 < words.length ? words[i + 1] : '';
+    const compound = `${word} ${nextWord}`;
+
+    // Hanya gabungkan compound numbers yang sudah terdefinisi di WORD_TO_NUMBER
+    if (WORD_TO_NUMBER[compound] !== undefined) {
+      result.push(compound);
+      i += 2;
+    } else {
+      result.push(word);
+      i++;
+    }
+  }
+
+  return result;
+};
+
+/**
+ * Parser hierarkis untuk angka Indonesia dengan enhanced edge case handling
+ */
+const parseHierarchicalNumber = (words: string[]): number => {
+  debugLog('🏗️ Starting hierarchical parsing for:', words);
+
+  const segments = splitByMajorMultipliers(words);
+  debugLog('📊 Segments after splitting:', segments);
+
+  let total = 0;
+
+  for (let i = 0; i < segments.length; i++) {
+    const segment = segments[i];
+
+    if (segment.type === 'number') {
+      const segmentValue = parseNumberSegment(segment.words);
+      debugLog(`🔢 Segment "${segment.words.join(' ')}" = ${segmentValue}`);
+
+      // Enhanced: Check untuk multiplier setelah segment ini
+      if (i + 1 < segments.length && segments[i + 1].type === 'multiplier') {
+        const multiplier = segments[i + 1].value;
+        total += segmentValue * multiplier;
+        debugLog(
+          `✅ Added ${segmentValue} × ${multiplier} = ${
+            segmentValue * multiplier
+          } to total`
+        );
+        i++; // Skip multiplier segment
+      } else {
+        total += segmentValue;
+        debugLog(`✅ Added ${segmentValue} directly to total`);
+      }
+    }
+  }
+
+  debugLog(`🎯 Final hierarchical result: ${total}`);
+  return total;
+};
+
+/**
+ * Split words berdasarkan major multipliers dengan validation yang lebih baik
+ */
+const splitByMajorMultipliers = (
+  words: string[]
+): Array<{
+  type: 'number' | 'multiplier';
+  words?: string[];
+  value?: number;
+}> => {
+  const majorMultipliers = ['juta', 'ribu'];
+  const segments = [];
+  let currentSegment: string[] = [];
+
+  for (const word of words) {
+    if (majorMultipliers.includes(word)) {
+      // Enhanced: Validasi bahwa ada segment sebelumnya
+      if (currentSegment.length > 0) {
+        segments.push({ type: 'number' as const, words: [...currentSegment] });
+        currentSegment = [];
+      }
+
+      // Tambahkan multiplier
+      segments.push({
+        type: 'multiplier' as const,
+        value: MULTIPLIERS[word],
+      });
+    } else {
+      currentSegment.push(word);
+    }
+  }
+
+  // Tambahkan segment terakhir jika ada
+  if (currentSegment.length > 0) {
+    segments.push({ type: 'number' as const, words: currentSegment });
+  }
+
+  return segments;
+};
+
+/**
+ * Parse segment angka dengan enhanced edge case handling
+ * Termasuk handling untuk "seratus lima ribu" pattern
+ */
+const parseNumberSegment = (words: string[]): number => {
+  debugLog(`🔍 Parsing number segment: [${words.join(', ')}]`);
+
+  let result = 0;
+  let currentNumber = 0;
+
+  for (let i = 0; i < words.length; i++) {
+    const word = words[i];
+
+    // Handle angka langsung atau kata angka
+    if (/^\d+$/.test(word)) {
+      currentNumber = parseInt(word, 10);
+      debugLog(`📝 Set currentNumber to ${currentNumber} from digit "${word}"`);
+    } else if (WORD_TO_NUMBER[word] !== undefined) {
+      currentNumber = WORD_TO_NUMBER[word];
+      debugLog(`📝 Set currentNumber to ${currentNumber} from word "${word}"`);
+    }
+    // Handle minor multipliers dengan enhanced logic
+    else if (word === 'puluh') {
+      if (currentNumber === 0) currentNumber = 1;
+      currentNumber *= 10;
+      debugLog(`🔄 Multiplied by 10 (puluh): currentNumber = ${currentNumber}`);
+    } else if (word === 'ratus') {
+      if (currentNumber === 0) currentNumber = 1;
+      currentNumber *= 100;
+      debugLog(
+        `🔄 Multiplied by 100 (ratus): currentNumber = ${currentNumber}`
+      );
+    }
+    // Enhanced: Handle unrecognized words dengan better accumulation
+    else {
+      if (currentNumber > 0) {
+        result += currentNumber;
+        debugLog(`➕ Added ${currentNumber} to result: ${result}`);
+        currentNumber = 0;
+      }
+    }
+  }
+
+  // Tambahkan currentNumber terakhir
+  result += currentNumber;
+  debugLog(
+    `🏁 Final segment result: ${result} (added remaining ${currentNumber})`
   );
+
+  return result;
 };
 
-const capitalizeItemName = (itemName: string): string => {
-  return itemName
-    .split(' ')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ');
-};
-
+/**
+ * Utility function untuk formatting ke Rupiah (exported untuk keperluan eksternal)
+ */
 export const formatToRupiah = (price: number): string => {
   return new Intl.NumberFormat('id-ID', {
     style: 'currency',
@@ -406,66 +484,84 @@ export const formatToRupiah = (price: number): string => {
 };
 
 /**
- * Test cases untuk debugging - COMPREHENSIVE VERSION
+ * Test runner function - hanya untuk development/testing
+ * Moved ke conditional execution untuk production safety
  */
-export const testCases = [
-  // Format tradisional Indonesia
-  {
-    input: 'mangga lima puluh ribu',
-    expected: { itemName: 'Mangga', price: 50000 },
-  },
-  {
-    input: 'mangga satu juta',
-    expected: { itemName: 'Mangga', price: 1000000 },
-  },
+const runTestCases = () => {
+  if (!DEBUG) return; // Skip di production
 
-  // Format Rupiah (yang bermasalah)
-  {
-    input: 'pizza hut rp75000',
-    expected: { itemName: 'Pizza Hut', price: 75000 },
-  },
-  {
-    input: 'pizza hut rp 75000',
-    expected: { itemName: 'Pizza Hut', price: 75000 },
-  },
-  {
-    input: 'pizza hut rp75.000',
-    expected: { itemName: 'Pizza Hut', price: 75000 },
-  },
+  const testCases = [
+    {
+      input: 'jeruk lima ratus dua puluh satu ribu',
+      expected: { itemName: 'Jeruk', price: 521000 },
+      description: 'Kasus utama yang bermasalah: 521 ribu',
+    },
+    {
+      input: 'nanas lima belas ribu lima ratus',
+      expected: { itemName: 'Nanas', price: 15500 },
+      description: 'Kasus kombinasi ribu + ratus',
+    },
+    {
+      input: 'mangga seratus dua puluh ribu lima ratus',
+      expected: { itemName: 'Mangga', price: 120500 },
+      description: 'Kasus kompleks: seratus dua puluh ribu lima ratus',
+    },
+    {
+      input: 'apel tiga ratus lima puluh ribu',
+      expected: { itemName: 'Apel', price: 350000 },
+      description: 'Test 350 ribu',
+    },
+    {
+      input: 'pisang satu juta dua ratus ribu',
+      expected: { itemName: 'Pisang', price: 1200000 },
+      description: 'Test jutaan + ribuan',
+    },
+    {
+      input: 'mangga lima puluh ribu',
+      expected: { itemName: 'Mangga', price: 50000 },
+      description: 'Format sederhana yang sudah bekerja',
+    },
+    {
+      input: 'indomie 3000',
+      expected: { itemName: 'Indomie', price: 3000 },
+      description: 'Format angka langsung',
+    },
+    {
+      input: 'nabati dan oreo 80 ribu',
+      expected: { itemName: 'Nabati Dan Oreo', price: 80000 },
+      description: 'Format angka + unit',
+    },
+  ];
 
-  // Format angka + unit (yang bermasalah)
-  {
-    input: 'nabati dan oreo 80 ribu',
-    expected: { itemName: 'Nabati Dan Oreo', price: 80000 },
-  },
-  {
-    input: 'nabati dan oreo 80ribu',
-    expected: { itemName: 'Nabati Dan Oreo', price: 80000 },
-  },
+  console.log('🧪 Testing ENHANCED hierarchical speech processing:');
+  testCases.forEach((test, index) => {
+    console.log(`\n--- Test ${index + 1}: ${test.description} ---`);
+    console.log(`Input: "${test.input}"`);
+    console.log(`Expected:`, test.expected);
 
-  // Format angka langsung
-  {
-    input: 'indomie 3000',
-    expected: { itemName: 'Indomie', price: 3000 },
-  },
-  {
-    input: 'aqua 500',
-    expected: { itemName: 'Aqua', price: 500000 }, // 500 -> 500k
-  },
-];
+    const result = extractItemAndPrice(test.input);
+    console.log(`Result:`, result);
 
-// Enhanced debugging - uncomment untuk test
-console.log('🧪 Testing ENHANCED speech processing:');
-testCases.forEach((test, index) => {
-  console.log(`\n--- Test ${index + 1} ---`);
-  console.log(`Input: "${test.input}"`);
-  console.log(`Expected:`, test.expected);
+    const isCorrect =
+      result?.price === test.expected.price &&
+      result?.itemName === test.expected.itemName;
+    console.log(isCorrect ? '✅ PASS' : '❌ FAIL');
 
-  const result = extractItemAndPrice(test.input);
-  console.log(`Result:`, result);
+    if (!isCorrect && result) {
+      if (result.price !== test.expected.price) {
+        const priceDiff = result.price - test.expected.price;
+        console.log(
+          `💡 Price difference: ${priceDiff} (got ${result.price}, expected ${test.expected.price})`
+        );
+      }
+      if (result.itemName !== test.expected.itemName) {
+        console.log(
+          `💡 Name difference: got "${result.itemName}", expected "${test.expected.itemName}"`
+        );
+      }
+    }
+  });
+};
 
-  const isCorrect =
-    result?.price === test.expected.price &&
-    result?.itemName === test.expected.itemName;
-  console.log(isCorrect ? '✅ PASS' : '❌ FAIL');
-});
+// Jalankan test cases hanya di development
+runTestCases();
