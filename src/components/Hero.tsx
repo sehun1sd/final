@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
-//import { ReactSVG } from 'react-svg';
 
 const Hero: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -123,28 +122,23 @@ const Hero: React.FC = () => {
           >
             {/* Main SVG container with hover effects */}
             <div className="relative group">
-              <ReactSVG
+              <img
                 src="./images/person-rocket.svg"
+                alt="Smart shopping with voice technology"
                 className={`w-full h-auto max-w-full transition-all duration-700 ease-out group-hover:scale-105 group-hover:-translate-y-2 floating ${
                   isLoaded ? 'opacity-100' : 'opacity-0'
                 }`}
-                beforeInjection={(svg) => {
-                  svg.setAttribute(
-                    'style',
-                    'filter: drop-shadow(0 10px 30px rgba(139, 92, 246, 0.3)); transition: all 0.7s ease-out; width: 100%; height: auto;'
-                  );
+                style={{
+                  filter: 'drop-shadow(0 10px 30px rgba(139, 92, 246, 0.3))',
+                  transition: 'all 0.7s ease-out',
                 }}
                 onMouseEnter={(e) => {
-                  const svg = e.currentTarget.querySelector('svg');
-                  if (svg)
-                    svg.style.filter =
-                      'drop-shadow(0 15px 40px rgba(139, 92, 246, 0.5))';
+                  e.currentTarget.style.filter =
+                    'drop-shadow(0 15px 40px rgba(139, 92, 246, 0.5))';
                 }}
                 onMouseLeave={(e) => {
-                  const svg = e.currentTarget.querySelector('svg');
-                  if (svg)
-                    svg.style.filter =
-                      'drop-shadow(0 10px 30px rgba(139, 92, 246, 0.3))';
+                  e.currentTarget.style.filter =
+                    'drop-shadow(0 10px 30px rgba(139, 92, 246, 0.3))';
                 }}
               />
 
