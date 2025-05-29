@@ -125,7 +125,7 @@ const Hero: React.FC<HeroProps> = ({ t }) => {
               <div className="svg-smooth-float">
                 <div className="svg-gentle-rotate">
                   <img
-                    src="/public/images/person-rocket.svg"
+                    src="/public/images/person-rocket-1.svg"
                     alt="Smart shopping with voice technology"
                     className={`w-full h-auto max-w-full transition-all duration-700 ease-out group-hover:scale-105 svg-main ${
                       isLoaded ? 'opacity-100' : 'opacity-0'
