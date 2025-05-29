@@ -201,21 +201,7 @@ const Hero: React.FC = () => {
           }
         }
         
-        .floating {
-          animation: float 6s ease-in-out infinite;
-        }
         
-        .floating-delayed {
-          animation: floatDelayed 4s ease-in-out infinite 1s;
-        }
-        
-        .floating-slow {
-          animation: floatSlow 8s ease-in-out infinite 2s;
-        }
-        
-        .shimmer {
-          animation: shimmer 3s ease-in-out infinite;
-        }
       `}</style>
     </section>
   );
