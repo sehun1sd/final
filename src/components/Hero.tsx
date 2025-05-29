@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
-import { ReactSVG } from 'react-svg';
+//import { ReactSVG } from 'react-svg';
 
 const Hero: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState(false);
