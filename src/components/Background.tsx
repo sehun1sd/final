@@ -2,28 +2,24 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ShoppingCart, MessageSquare, Camera, Lightbulb } from 'lucide-react';
 
 const Background: React.FC = () => {
-  // State untuk mengontrol animasi
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const currentRef = sectionRef.current;
 
-    // Intersection Observer untuk mendeteksi kapan section masuk viewport
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          // Trigger animasi ketika 20% dari section terlihat
           if (entry.isIntersecting && entry.intersectionRatio >= 0.2) {
             setIsVisible(true);
-            // Unobserve setelah animasi dipicu untuk performa yang lebih baik
             observer.unobserve(entry.target);
           }
         });
       },
       {
-        threshold: 0.2, // Trigger ketika 20% section terlihat
-        rootMargin: '-50px 0px', // Offset untuk trigger yang lebih natural
+        threshold: 0.2,
+        rootMargin: '-50px 0px',
       }
     );
 
@@ -31,7 +27,6 @@ const Background: React.FC = () => {
       observer.observe(currentRef);
     }
 
-    // Cleanup observer saat component unmount
     return () => {
       if (currentRef) {
         observer.unobserve(currentRef);
@@ -43,11 +38,10 @@ const Background: React.FC = () => {
     <section
       id="why"
       ref={sectionRef}
-      className={`py-20 bg-gray-900 relative transition-all duration-1000 ease-out ${
+      className={`py-20 bg-gradient-to-b from-gray-900 via-gray-950 to-gray-900 relative transition-all duration-1000 ease-out ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
       }`}
     >
-      {/* Decorative elements dengan animasi delay */}
       <div
         className={`absolute top-1/4 right-0 w-64 h-64 bg-purple-600/10 rounded-full filter blur-3xl transition-all duration-1200 ease-out ${
           isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-75'
@@ -63,7 +57,6 @@ const Background: React.FC = () => {
 
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left Column - Our Why Box */}
           <div
             className={`order-2 lg:order-1 transition-all duration-1000 ease-out ${
               isVisible
@@ -107,7 +100,6 @@ const Background: React.FC = () => {
                 </div>
               </div>
 
-              {/* Decorative corner accents dengan animasi stagger */}
               {[
                 {
                   position: '-top-3 -left-3',
@@ -143,7 +135,6 @@ const Background: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column - The Journey */}
           <div
             className={`order-1 lg:order-2 transition-all duration-1000 ease-out ${
               isVisible
