@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import type { Language } from '../constants/translations';
+import mainLogo from "/public/images/person-rocket-1.svg";
 
 interface HeroProps {
   t: {
@@ -125,7 +126,7 @@ const Hero: React.FC<HeroProps> = ({ t }) => {
               <div className="svg-smooth-float">
                 <div className="svg-gentle-rotate">
                   <img
-                    src="/dist/assets/person.svg"
+                    src={mainLogo}
                     alt="Smart shopping with voice technology"
                     className={`w-full h-auto max-w-full transition-all duration-700 ease-out group-hover:scale-105 svg-main ${
                       isLoaded ? 'opacity-100' : 'opacity-0'
