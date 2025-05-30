@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import type { Language } from '../constants/translations';
 import mainLogo from '/public/images/person-rocket-1.svg';
-import GradientText from './GradientTeks';
+import GradientText from './GradientText';
 
 interface HeroProps {
   t: {
