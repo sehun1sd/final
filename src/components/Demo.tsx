@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Mic,
   MicOff,
@@ -24,6 +24,27 @@ interface StatusMessage {
 }
 
 const Demo: React.FC = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Intersection Observer for scroll animation
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !isVisible) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.2, rootMargin: '-50px' }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [isVisible]);
+
   // Custom hook that handles all the cart logic
   const {
     items,
@@ -106,16 +127,23 @@ const Demo: React.FC = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="demo"
-      className="min-h-screen py-12 bg-gradient-to-br from-gray-950 via-gray-900 to-purple-950 relative overflow-hidden"
+      className={`min-h-screen py-12 bg-gradient-to-b from-gray-900 via-indigo-950 to-black relative overflow-hidden transition-all duration-1000 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+      }`}
     >
-      <BackgroundDecorations />
+      <EnhancedBackgroundDecorations />
 
-      <div className="container mx-auto px-4 md:px-6 max-w-6xl relative z-10">
-        <Header />
+      <div className={`container mx-auto px-4 md:px-6 max-w-6xl relative z-10 transition-all duration-700 delay-300 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+      }`}>
+        <Header isVisible={isVisible} />
 
         <div className="max-w-5xl mx-auto">
-          <div className="bg-gray-900/40 backdrop-blur-xl rounded-2xl border border-gray-700/50 overflow-hidden shadow-[0_0_50px_rgba(139,92,246,0.1)]">
+          <div className={`bg-gray-900/40 backdrop-blur-xl rounded-2xl border border-gray-700/50 overflow-hidden shadow-[0_0_50px_rgba(139,92,246,0.1)] transition-all duration-700 delay-500 ${
+            isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+          }`}>
             <StatusMessageDisplay statusMessage={statusMessage} />
 
             <div className="p-6 md:p-8">
@@ -145,23 +173,34 @@ const Demo: React.FC = () => {
           </div>
         </div>
 
-        <InstructionsFooter />
+        <InstructionsFooter isVisible={isVisible} />
       </div>
     </section>
   );
 };
 
-// UI Components (no logic, pure presentation)
-const BackgroundDecorations: React.FC = () => (
+// Enhanced UI Components with animations
+const EnhancedBackgroundDecorations: React.FC = () => (
   <>
     <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-gray-900/50 to-transparent"></div>
+    
+    {/* Animated floating elements */}
     <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/5 rounded-full filter blur-3xl animate-pulse"></div>
-    <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-600/5 rounded-full filter blur-3xl animate-pulse"></div>
+    <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-600/5 rounded-full filter blur-3xl animate-pulse animation-delay-1000"></div>
+    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-indigo-600/3 rounded-full filter blur-3xl animate-pulse animation-delay-2000"></div>
+    
+    {/* Subtle grid pattern */}
+    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
+    
+    {/* Gradient overlay */}
+    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-indigo-950/10 to-purple-950/20"></div>
   </>
 );
 
-const Header: React.FC = () => (
-  <div className="text-center max-w-3xl mx-auto mb-12">
+const Header: React.FC<{ isVisible: boolean }> = ({ isVisible }) => (
+  <div className={`text-center max-w-3xl mx-auto mb-12 transition-all duration-700 delay-200 ${
+    isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+  }`}>
     <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
       Coba VoiceCart
     </h2>
@@ -179,13 +218,13 @@ const StatusMessageDisplay: React.FC<{
 
   return (
     <div
-      className={`mx-6 mt-6 p-4 rounded-xl flex items-start border ${
+      className={`mx-6 mt-6 p-4 rounded-xl flex items-start border transition-all duration-500 transform ${
         statusMessage.type === 'error'
-          ? 'bg-red-900/20 border-red-700/30 text-red-300'
+          ? 'bg-red-900/20 border-red-700/30 text-red-300 animate-pulse'
           : statusMessage.type === 'success'
-          ? 'bg-green-900/20 border-green-700/30 text-green-300'
+          ? 'bg-green-900/20 border-green-700/30 text-green-300 animate-bounce'
           : 'bg-blue-900/20 border-blue-700/30 text-blue-300'
-      } transition-all duration-300`}
+      }`}
     >
       <AlertCircle className="h-5 w-5 mr-3 flex-shrink-0 mt-0.5" />
       <span className="text-sm font-medium">{statusMessage.text}</span>
@@ -248,20 +287,20 @@ const InputModeToggle: React.FC<{
 }> = ({ inputMode, onInputModeChange }) => (
   <div className="flex space-x-2">
     <button
-      className={`flex-1 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
+      className={`flex-1 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 ${
         inputMode === 'voice'
-          ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg shadow-purple-500/25'
-          : 'bg-gray-800/50 text-gray-400 border border-gray-700/50 hover:bg-gray-700/50'
+          ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40'
+          : 'bg-gray-800/50 text-gray-400 border border-gray-700/50 hover:bg-gray-700/50 hover:border-gray-600/50'
       }`}
       onClick={() => onInputModeChange('voice')}
     >
       🎤 Voice Input
     </button>
     <button
-      className={`flex-1 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
+      className={`flex-1 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 ${
         inputMode === 'manual'
-          ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg shadow-purple-500/25'
-          : 'bg-gray-800/50 text-gray-400 border border-gray-700/50 hover:bg-gray-700/50'
+          ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40'
+          : 'bg-gray-800/50 text-gray-400 border border-gray-700/50 hover:bg-gray-700/50 hover:border-gray-600/50'
       }`}
       onClick={() => onInputModeChange('manual')}
     >
@@ -275,16 +314,16 @@ const VoiceInputInterface: React.FC<{
   isSupported: boolean;
   onToggleVoice: () => void;
 }> = ({ isListening, isSupported, onToggleVoice }) => (
-  <div className="bg-gray-800/30 rounded-xl p-8 text-center border border-gray-700/30">
+  <div className="bg-gray-800/30 rounded-xl p-8 text-center border border-gray-700/30 backdrop-blur-sm">
     <button
       onClick={onToggleVoice}
       disabled={!isSupported}
-      className={`w-20 h-20 rounded-full flex items-center justify-center mb-6 mx-auto transition-all duration-300 ${
+      className={`w-20 h-20 rounded-full flex items-center justify-center mb-6 mx-auto transition-all duration-300 transform ${
         !isSupported
           ? 'bg-gray-600/50 cursor-not-allowed'
           : isListening
-          ? 'bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 shadow-lg shadow-red-500/30 animate-pulse'
-          : 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 shadow-lg shadow-purple-500/30 hover:scale-105'
+          ? 'bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 shadow-lg shadow-red-500/30 animate-pulse hover:scale-110 active:scale-95'
+          : 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 shadow-lg shadow-purple-500/30 hover:scale-110 active:scale-95 hover:shadow-purple-500/50'
       }`}
     >
       {isListening ? (
@@ -294,7 +333,7 @@ const VoiceInputInterface: React.FC<{
       )}
     </button>
 
-    <h3 className="text-white font-semibold text-lg mb-3">
+    <h3 className="text-white font-semibold text-lg mb-3 transition-colors duration-300">
       {!isSupported
         ? 'Speech Recognition Tidak Didukung'
         : isListening
@@ -310,7 +349,7 @@ const VoiceInputInterface: React.FC<{
         : 'Tekan tombol mikrofon dan ucapkan produk dengan harga'}
     </p>
 
-    <div className="bg-gray-700/20 rounded-lg p-4 text-left">
+    <div className="bg-gray-700/20 rounded-lg p-4 text-left border border-gray-600/20">
       <p className="text-gray-300 text-xs font-medium mb-2">Contoh:</p>
       <ul className="text-gray-400 text-xs space-y-1">
         <li>• "mangga lima puluh ribu"</li>
@@ -334,7 +373,7 @@ const ManualInputInterface: React.FC<{
   onManualPriceChange,
   onManualAdd,
 }) => (
-  <div className="bg-gray-800/30 rounded-xl p-6 border border-gray-700/30">
+  <div className="bg-gray-800/30 rounded-xl p-6 border border-gray-700/30 backdrop-blur-sm">
     <h3 className="text-white font-semibold text-lg mb-4">
       Tambah Item Manual
     </h3>
@@ -349,7 +388,7 @@ const ManualInputInterface: React.FC<{
           value={manualName}
           onChange={(e) => onManualNameChange(e.target.value)}
           placeholder="Contoh: Mangga"
-          className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent transition-all"
+          className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent transition-all duration-300 hover:bg-gray-700/70"
         />
       </div>
 
@@ -362,13 +401,13 @@ const ManualInputInterface: React.FC<{
           value={manualPrice}
           onChange={(e) => onManualPriceChange(e.target.value)}
           placeholder="Contoh: 55000"
-          className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent transition-all"
+          className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent transition-all duration-300 hover:bg-gray-700/70"
         />
       </div>
 
       <button
         onClick={onManualAdd}
-        className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 px-6 rounded-lg font-semibold hover:from-purple-600 hover:to-blue-600 transition-all duration-200 flex items-center justify-center shadow-lg shadow-purple-500/25"
+        className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 px-6 rounded-lg font-semibold hover:from-purple-600 hover:to-blue-600 transition-all duration-300 flex items-center justify-center shadow-lg shadow-purple-500/25 transform hover:scale-105 active:scale-95 hover:shadow-purple-500/40"
       >
         <Plus className="h-5 w-5 mr-2" />
         Tambah ke Keranjang
@@ -421,7 +460,7 @@ const CartHeader: React.FC<{
     {itemsLength > 0 && (
       <button
         onClick={onClearCart}
-        className="text-red-400 hover:text-red-300 text-sm font-medium transition-colors duration-200 flex items-center space-x-1"
+        className="text-red-400 hover:text-red-300 text-sm font-medium transition-all duration-300 flex items-center space-x-1 hover:bg-red-900/10 px-3 py-1 rounded-lg transform hover:scale-105 active:scale-95"
       >
         <Trash2 className="h-4 w-4" />
         <span>Hapus Semua</span>
@@ -434,7 +473,7 @@ const CartItemsList: React.FC<{
   items: Item[];
   onDeleteItem: (id: number) => void;
 }> = ({ items, onDeleteItem }) => (
-  <div className="bg-gray-800/20 rounded-xl border border-gray-700/30 max-h-96 overflow-y-auto">
+  <div className="bg-gray-800/20 rounded-xl border border-gray-700/30 max-h-96 overflow-y-auto backdrop-blur-sm">
     {items.length === 0 ? (
       <EmptyCart />
     ) : (
@@ -454,7 +493,7 @@ const CartItemsList: React.FC<{
 
 const EmptyCart: React.FC = () => (
   <div className="p-8 text-center">
-    <ShoppingCart className="h-12 w-12 text-gray-600 mx-auto mb-3" />
+    <ShoppingCart className="h-12 w-12 text-gray-600 mx-auto mb-3 animate-pulse" />
     <p className="text-gray-400">Keranjang masih kosong</p>
     <p className="text-gray-500 text-sm mt-1">
       Tambahkan produk dengan voice atau manual input
@@ -467,7 +506,7 @@ const CartItem: React.FC<{
   index: number;
   onDeleteItem: (id: number) => void;
 }> = ({ item, index, onDeleteItem }) => (
-  <div className="p-4 flex items-center justify-between hover:bg-gray-700/20 transition-colors">
+  <div className="p-4 flex items-center justify-between hover:bg-gray-700/20 transition-all duration-300">
     <div className="flex-1">
       <div className="flex items-center space-x-3">
         <span className="text-gray-400 text-sm font-mono w-6">
@@ -484,7 +523,7 @@ const CartItem: React.FC<{
 
     <button
       onClick={() => onDeleteItem(item.id)}
-      className="text-red-400 hover:text-red-300 p-2 rounded-lg hover:bg-red-900/20 transition-all duration-200"
+      className="text-red-400 hover:text-red-300 p-2 rounded-lg hover:bg-red-900/20 transition-all duration-300 transform hover:scale-110 active:scale-95"
       title={`Hapus ${item.name}`}
     >
       <Trash2 className="h-4 w-4" />
@@ -496,10 +535,10 @@ const CartSummary: React.FC<{
   totalPrice: number;
   itemCount: number;
 }> = ({ totalPrice, itemCount }) => (
-  <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-xl p-6 border border-purple-500/20">
+  <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-xl p-6 border border-purple-500/20 backdrop-blur-sm shadow-lg">
     <div className="flex items-center justify-between mb-4">
       <span className="text-gray-300 font-medium">Total Belanja:</span>
-      <span className="text-2xl font-bold text-white">
+      <span className="text-2xl font-bold text-white animate-pulse">
         {formatToRupiah(totalPrice)}
       </span>
     </div>
@@ -511,9 +550,11 @@ const CartSummary: React.FC<{
   </div>
 );
 
-const InstructionsFooter: React.FC = () => (
-  <div className="max-w-4xl mx-auto mt-12 text-center">
-    <div className="bg-gray-900/30 backdrop-blur-sm rounded-xl border border-gray-700/30 p-6">
+const InstructionsFooter: React.FC<{ isVisible: boolean }> = ({ isVisible }) => (
+  <div className={`max-w-4xl mx-auto mt-12 text-center transition-all duration-700 delay-700 ${
+    isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+  }`}>
+    <div className="bg-gray-900/30 backdrop-blur-sm rounded-xl border border-gray-700/30 p-6 hover:bg-gray-900/40 transition-all duration-300">
       <h3 className="text-white font-semibold text-lg mb-4">
         💡 Tips Penggunaan
       </h3>
