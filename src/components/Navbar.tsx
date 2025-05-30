@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Mic, Globe } from 'lucide-react';
+import { Menu, X, Mic } from 'lucide-react';
 import LanguageToggle from './LanguageToggle';
 import type { Language } from '../constants/translations';
 
 interface NavbarProps {
   currentLang: Language;
   onToggleLanguage: () => void;
+  t: any;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ currentLang, onToggleLanguage }) => {
+const Navbar: React.FC<NavbarProps> = ({ currentLang, onToggleLanguage, t }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -48,19 +49,19 @@ const Navbar: React.FC<NavbarProps> = ({ currentLang, onToggleLanguage }) => {
               href="#features"
               className="text-gray-300 hover:text-purple-400 transition-colors"
             >
-              Features
+              {t.features}
             </a>
             <a
               href="#why"
               className="text-gray-300 hover:text-purple-400 transition-colors"
             >
-              Our Why
+              {t.ourWhy}
             </a>
             <a
               href="#demo"
               className="text-gray-300 hover:text-purple-400 transition-colors"
             >
-              Demo
+              {t.demo}
             </a>
             <LanguageToggle currentLang={currentLang} onToggle={onToggleLanguage} />
             <button
@@ -71,7 +72,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentLang, onToggleLanguage }) => {
               }
               className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-5 py-2 rounded-full font-medium hover:shadow-[0_0_15px_rgba(139,92,246,0.5)] transition-all duration-300"
             >
-              Try Demo
+              {t.tryDemo}
             </button>
           </div>
 
@@ -100,24 +101,32 @@ const Navbar: React.FC<NavbarProps> = ({ currentLang, onToggleLanguage }) => {
                 className="text-gray-300 hover:text-purple-400 transition-colors py-2"
                 onClick={() => setIsOpen(false)}
               >
-                Features
+                {t.features}
               </a>
               <a
                 href="#why"
                 className="text-gray-300 hover:text-purple-400 transition-colors py-2"
                 onClick={() => setIsOpen(false)}
               >
-                Our Why
+                {t.ourWhy}
               </a>
               <a
                 href="#demo"
                 className="text-gray-300 hover:text-purple-400 transition-colors py-2"
                 onClick={() => setIsOpen(false)}
               >
-                Demo
+                {t.demo}
               </a>
-              <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-5 py-2 rounded-full font-medium w-full hover:shadow-[0_0_15px_rgba(139,92,246,0.5)] transition-all duration-300">
-                Try Demo
+              <button
+                onClick={() => {
+                  document
+                    .getElementById('demo')
+                    ?.scrollIntoView({ behavior: 'smooth' });
+                  setIsOpen(false);
+                }}
+                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-5 py-2 rounded-full font-medium w-full hover:shadow-[0_0_15px_rgba(139,92,246,0.5)] transition-all duration-300"
+              >
+                {t.tryDemo}
               </button>
             </div>
           </div>

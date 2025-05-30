@@ -1,6 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Mic, VolumeX, Brain, BarChart, Zap, Share2 } from 'lucide-react';
 
+interface FeaturesProps {
+  t: any;
+}
+
 const FeatureCard: React.FC<{
   icon: React.ReactNode;
   title: string;
@@ -26,7 +30,7 @@ const FeatureCard: React.FC<{
   );
 };
 
-const Features: React.FC = () => {
+const Features: React.FC<FeaturesProps> = ({ t }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [tipsVisible, setTipsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
@@ -70,39 +74,33 @@ const Features: React.FC = () => {
   const features = [
     {
       icon: <Mic className="h-6 w-6" />,
-      title: 'Voice Recognition',
-      description:
-        "Optimized voice recognition system tailored specifically for shopping contexts with structure recognition: 'Product Name, Price'.",
+      title: t.featureCards.voiceRecognition.title,
+      description: t.featureCards.voiceRecognition.description,
     },
     {
       icon: <Brain className="h-6 w-6" />,
-      title: 'Smart Filtering',
-      description:
-        'Intelligent filters and regex patterns automatically separate words and numbers with minimal error, even in noisy environments.',
+      title: t.featureCards.smartFiltering.title,
+      description: t.featureCards.smartFiltering.description,
     },
     {
       icon: <BarChart className="h-6 w-6" />,
-      title: 'Real-time Budget Tracking',
-      description:
-        'See your running total update instantly as you add items, helping you stay within budget while shopping.',
+      title: t.featureCards.realTimeBudget.title,
+      description: t.featureCards.realTimeBudget.description,
     },
     {
       icon: <VolumeX className="h-6 w-6" />,
-      title: 'Noise Reduction',
-      description:
-        'Advanced algorithms filter out background noise for better accuracy in busy shopping environments.',
+      title: t.featureCards.noiseReduction.title,
+      description: t.featureCards.noiseReduction.description,
     },
     {
       icon: <Zap className="h-6 w-6" />,
-      title: 'No Installation Required',
-      description:
-        'Works directly in your browser - no app downloads, no sign-ups, and no personal data stored.',
+      title: t.featureCards.noInstallation.title,
+      description: t.featureCards.noInstallation.description,
     },
     {
       icon: <Share2 className="h-6 w-6" />,
-      title: 'Shopping List Export',
-      description:
-        'Save and share your shopping list and totals with others via simple link sharing.',
+      title: t.featureCards.listExport.title,
+      description: t.featureCards.listExport.description,
     },
   ];
 
@@ -124,11 +122,10 @@ const Features: React.FC = () => {
           }`}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Supercharged Features
+            {t.featuresTitle}
           </h2>
           <p className="text-gray-400 text-lg">
-            VoiceCart combines intelligent voice recognition with simple user
-            experience to make budget tracking effortless while shopping.
+            {t.featuresSubtitle}
           </p>
         </div>
 
@@ -159,23 +156,10 @@ const Features: React.FC = () => {
           }}
         >
           <h3 className="text-2xl font-semibold text-white mb-4">
-            Voice Input Tips
+            {t.voiceInputTips.title}
           </h3>
           <ul className="space-y-3 text-gray-300">
-            {[
-              {
-                text: 'Speak clearly with the format: ',
-                code: '"Product Name, Price"',
-              },
-              {
-                text: 'Use a decent microphone for better recognition accuracy',
-                code: null,
-              },
-              {
-                text: 'Pause briefly between each item for better recognition',
-                code: null,
-              },
-            ].map((tip, index) => (
+            {t.voiceInputTips.tips.map((tip: string, index: number) => (
               <li
                 key={index}
                 className={`flex items-start transform transition-all duration-500 ${
@@ -203,14 +187,7 @@ const Features: React.FC = () => {
                     />
                   </svg>
                 </span>
-                <span>
-                  {tip.text}
-                  {tip.code && (
-                    <span className="font-mono bg-gray-800 px-2 py-0.5 rounded text-purple-300 transition-colors hover:bg-gray-700">
-                      {tip.code}
-                    </span>
-                  )}
-                </span>
+                <span>{tip}</span>
               </li>
             ))}
           </ul>

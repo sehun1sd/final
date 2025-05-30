@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ShoppingCart, MessageSquare, Camera, Lightbulb } from 'lucide-react';
 
-const Background: React.FC = () => {
+interface BackgroundProps {
+  t: any;
+}
+
+const Background: React.FC<BackgroundProps> = ({ t }) => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -75,16 +79,10 @@ const Background: React.FC = () => {
                   }`}
                   style={{ transitionDelay: '500ms' }}
                 >
-                  Our Why
+                  {t.ourWhyTitle}
                 </h2>
                 <div className="space-y-6 text-gray-300">
-                  {[
-                    'Di banyak swalayan, kita terbiasa mengambil barang tanpa tahu pasti berapa total yang akan dibayar. Tak jarang, niat belanja hemat berujung pada over budget.',
-                    'Dari keresahan ini, lahirlah VoiceCart—bukan sekadar aplikasi, tapi solusi praktis untuk semua orang yang ingin berbelanja dengan lebih terkontrol.',
-                    'Awalnya, kami mencoba pendekatan scanning kamera. Tapi, ternyata ada banyak kendala teknis: dari daftar harga yang buram, font yang tidak konsisten, sampai posisi angka yang tidak terdeteksi dengan baik.',
-                    'Kami lalu menemukan jawaban lewat pendekatan suara. Dengan menyebutkan nama barang dan harganya, sistem langsung mengenali dan menghitung secara otomatis. Lebih simpel, cepat, dan akurat.',
-                    'Inilah bentuk kecil inovasi yang kami harap bisa diterapkan di berbagai tempat belanja tanpa perlu membuat sistem yang mahal dan rumit.',
-                  ].map((text, index) => (
+                  {t.backgroundStory.map((text: string, index: number) => (
                     <p
                       key={index}
                       className={`transition-all duration-800 ease-out ${
@@ -152,7 +150,7 @@ const Background: React.FC = () => {
                 }`}
                 style={{ transitionDelay: '600ms' }}
               >
-                The Journey
+                {t.journey.title}
               </h2>
               <p
                 className={`text-gray-400 text-lg mb-8 transition-all duration-800 ease-out ${
@@ -162,38 +160,33 @@ const Background: React.FC = () => {
                 }`}
                 style={{ transitionDelay: '700ms' }}
               >
-                Our path to creating VoiceCart wasn't straightforward. Here's
-                the story behind our innovation.
+                {t.journey.subtitle}
               </p>
 
               <div className="space-y-6">
                 {[
                   {
                     icon: ShoppingCart,
-                    title: 'The Problem',
-                    description:
-                      'Shopping without knowing your running total leads to budget surprises at checkout.',
+                    title: t.journey.steps.problem.title,
+                    description: t.journey.steps.problem.description,
                     color: 'blue',
                   },
                   {
                     icon: Camera,
-                    title: 'First Attempt',
-                    description:
-                      'We tried camera-based scanning, but encountered issues with blurry price tags, inconsistent fonts, and detection challenges.',
+                    title: t.journey.steps.firstAttempt.title,
+                    description: t.journey.steps.firstAttempt.description,
                     color: 'yellow',
                   },
                   {
                     icon: MessageSquare,
-                    title: 'The Breakthrough',
-                    description:
-                      'Voice input emerged as the simpler, more accurate solution - just speak the product and price.',
+                    title: t.journey.steps.breakthrough.title,
+                    description: t.journey.steps.breakthrough.description,
                     color: 'purple',
                   },
                   {
                     icon: Lightbulb,
-                    title: 'The Solution',
-                    description:
-                      'VoiceCart was born - a simple, accessible way to track shopping expenses in real-time using just your voice.',
+                    title: t.journey.steps.solution.title,
+                    description: t.journey.steps.solution.description,
                     color: 'green',
                   },
                 ].map((item, index) => {
