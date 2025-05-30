@@ -48,7 +48,7 @@ const Footer: React.FC = () => {
             <ul className="space-y-2">
               <li className="text-gray-400">
                 <a href="mailto:hello@voicecart.app" className="hover:text-purple-400 transition-colors">
-                  mochammad.sechan_ti23@nusaputra.ac.id
+                  sehanaf4@gmail.com
                 </a>
               </li>
               <li className="text-gray-400">
