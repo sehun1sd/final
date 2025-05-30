@@ -59,7 +59,7 @@ const Hero: React.FC<HeroProps> = ({ t }) => {
                 }`}
               >
                 {' '}
-                Voice
+                VoiceCart
               </span>
             </h1>
 
