@@ -10,22 +10,22 @@ export const translations = {
 
     // Hero section
     title: 'Kontrol Anggaran Belanja Dengan ',
-    subtitle: 'VoiceCart adalah solusi ringan berbasis web yang membantu Anda melacak pengeluaran belanja secara real-time hanya dengan suara—tanpa perlu instalasi, login, atau input manual.',
+    subtitle: 'VoiceCart adalah solusi berbasis web yang membantu Anda melacak pengeluaran belanja secara real-time hanya dengan suara. Tanpa perlu instalasi, login, atau input manual.',
     tryDemoNow: 'Coba Demo Sekarang',
     learnMore: 'Pelajari Lebih Lanjut',
 
     // Features section
     featuresTitle: 'Fitur Unggulan',
-    featuresSubtitle: 'VoiceCart menggabungkan teknologi pengenalan suara cerdas dengan pengalaman pengguna yang sederhana untuk membuat pelacakan anggaran menjadi lebih mudah saat berbelanja.',
+    featuresSubtitle: 'VoiceCart menggabungkan teknologi pengenalan suara cerdas dengan pengalaman pengguna yang sederhana untuk membuat pelacakan anggaran menjadi mudah saat berbelanja.',
     
     featureCards: {
       voiceRecognition: {
         title: 'Pengenalan Suara',
-        description: 'Sistem pengenalan suara yang dioptimalkan khusus untuk konteks belanja dengan pengenalan struktur: "Nama Produk, Harga".'
+        description: 'Sistem pengenalan suara yang dioptimalkan khusus untuk konteks belanja dengan format yang mudah dipahami sistem.'
       },
       smartFiltering: {
         title: 'Filter Cerdas',
-        description: 'Filter cerdas dan pola regex secara otomatis memisahkan kata dan angka dengan kesalahan minimal, bahkan di lingkungan yang bising.'
+        description: 'Filter cerdas dan algoritma canggih secara otomatis memisahkan nama produk dan harga dengan akurasi tinggi, bahkan di lingkungan yang bising.'
       },
       realTimeBudget: {
         title: 'Pelacakan Anggaran Real-time',
@@ -33,64 +33,64 @@ export const translations = {
       },
       noiseReduction: {
         title: 'Reduksi Noise',
-        description: 'Algoritma canggih menyaring noise latar belakang untuk akurasi yang lebih baik di lingkungan belanja yang ramai.'
+        description: 'Algoritma canggih menyaring noise latar belakang untuk akurasi pengenalan yang lebih baik di lingkungan belanja yang ramai.'
       },
       noInstallation: {
         title: 'Tanpa Instalasi',
-        description: 'Berjalan langsung di browser Anda - tanpa unduhan aplikasi, tanpa pendaftaran, dan tanpa data pribadi yang disimpan.'
+        description: 'Berjalan langsung di browser Anda tanpa unduhan aplikasi, tanpa pendaftaran, dan tanpa menyimpan data pribadi.'
       },
       listExport: {
         title: 'Ekspor Daftar Belanja',
-        description: 'Simpan dan bagikan daftar belanja dan total Anda dengan orang lain melalui berbagi tautan sederhana.'
+        description: 'Simpan dan bagikan daftar belanja beserta total Anda dengan orang lain melalui tautan sederhana.'
       }
     },
 
     voiceInputTips: {
       title: 'Tips Penggunaan Suara',
       tips: [
-        'Bicara dengan jelas dengan format: "Nama Produk, Harga"',
+        'Bicara dengan jelas dengan format nama produk diikuti harga',
         'Gunakan mikrofon yang baik untuk akurasi pengenalan yang lebih baik',
-        'Beri jeda singkat antara setiap item untuk pengenalan yang lebih baik'
+        'Beri jeda singkat antara setiap item untuk pengenalan yang optimal'
       ]
     },
 
     // Background section
     backgroundTitle: 'Latar Belakang',
-    ourWhyTitle: 'Mengapa VoiceCart?',
+    ourWhyTitle: 'Mengapa VoiceCart',
     backgroundStory: [
-      'Di banyak swalayan, kita terbiasa mengambil barang tanpa tahu pasti berapa total yang akan dibayar. Tak jarang, niat belanja hemat berujung pada over budget.',
-      'Dari keresahan ini, lahirlah VoiceCart—bukan sekadar aplikasi, tapi solusi praktis untuk semua orang yang ingin berbelanja dengan lebih terkontrol.',
-      'Awalnya, kami mencoba pendekatan scanning kamera. Tapi, ternyata ada banyak kendala teknis: dari daftar harga yang buram, font yang tidak konsisten, sampai posisi angka yang tidak terdeteksi dengan baik.',
-      'Kami lalu menemukan jawaban lewat pendekatan suara. Dengan menyebutkan nama barang dan harganya, sistem langsung mengenali dan menghitung secara otomatis. Lebih simpel, cepat, dan akurat.',
-      'Inilah bentuk kecil inovasi yang kami harap bisa diterapkan di berbagai tempat belanja tanpa perlu membuat sistem yang mahal dan rumit.'
+      'Di banyak swalayan, kita terbiasa mengambil barang tanpa tahu pasti berapa total yang akan dibayar. Tak jarang, niat belanja hemat berujung pada kejutan di kasir.',
+      'Dari keresahan ini lahirlah VoiceCart, bukan sekadar aplikasi biasa tapi solusi praktis untuk semua orang yang ingin berbelanja dengan lebih terkontrol.',
+      'Awalnya kami mencoba pendekatan scanning kamera, namun ternyata ada banyak kendala teknis mulai dari label harga yang buram, font yang tidak konsisten, hingga posisi angka yang sulit terdeteksi.',
+      'Kami kemudian menemukan solusi melalui pendekatan suara. Dengan menyebutkan nama barang dan harganya, sistem langsung mengenali dan menghitung secara otomatis. Lebih simpel, cepat, dan akurat.',
+      'Inilah bentuk inovasi sederhana yang kami harap bisa diterapkan di berbagai tempat belanja tanpa perlu sistem yang mahal dan rumit.'
     ],
 
     journey: {
       title: 'Perjalanan Kami',
-      subtitle: 'Perjalanan kami dalam menciptakan VoiceCart tidak selalu mulus. Ini adalah cerita di balik inovasi kami.',
+      subtitle: 'Perjalanan menciptakan VoiceCart tidak selalu mulus. Ini adalah cerita di balik inovasi kami.',
       steps: {
         problem: {
           title: 'Masalah',
-          description: 'Berbelanja tanpa mengetahui total belanjaan menyebabkan kejutan anggaran saat pembayaran.'
+          description: 'Berbelanja tanpa mengetahui total belanjaan sering menyebabkan kejutan anggaran saat pembayaran.'
         },
         firstAttempt: {
           title: 'Percobaan Pertama',
-          description: 'Kami mencoba scanning berbasis kamera, tapi menghadapi masalah dengan label harga yang buram, font yang tidak konsisten, dan tantangan deteksi.'
+          description: 'Kami mencoba scanning berbasis kamera, namun menghadapi masalah dengan label harga yang buram, font yang tidak konsisten, dan tantangan pendeteksian.'
         },
         breakthrough: {
           title: 'Terobosan',
-          description: 'Input suara muncul sebagai solusi yang lebih sederhana dan akurat - cukup sebutkan produk dan harganya.'
+          description: 'Input suara muncul sebagai solusi yang lebih sederhana dan akurat, cukup sebutkan produk dan harganya.'
         },
         solution: {
           title: 'Solusi',
-          description: 'VoiceCart lahir - cara sederhana dan mudah diakses untuk melacak pengeluaran belanja secara real-time hanya dengan suara Anda.'
+          description: 'VoiceCart lahir sebagai cara sederhana dan mudah diakses untuk melacak pengeluaran belanja secara real-time hanya dengan suara Anda.'
         }
       }
     },
 
     // Demo section
     demoTitle: 'Coba VoiceCart',
-    demoSubtitle: 'Rasakan kemudahan mencatat belanja dengan teknologi pengenalan suara VoiceCart. Cukup sebutkan nama produk dan harganya!',
+    demoSubtitle: 'Rasakan kemudahan mencatat belanja dengan teknologi pengenalan suara VoiceCart. Cukup sebutkan nama produk dan harganya.',
     voiceInput: 'Input Suara',
     manualInput: 'Input Manual',
     listening: 'Mendengarkan... Sebutkan nama produk dan harga',
@@ -122,18 +122,18 @@ export const translations = {
 
     // Usage Tips
     usageTipsTitle: 'Tips Penggunaan',
-    voiceInputTipsTitle: 'Input Suara:',
+    voiceInputTipsTitle: 'Input Suara',
     voiceInputTipsList: [
       'Ucapkan dengan jelas dan tidak terburu-buru',
-      'Format: "[nama produk] [harga dalam kata]"',
-      'Contoh: "mangga lima puluh ribu"',
+      'Format: nama produk diikuti harga dalam kata',
+      'Contoh: mangga lima puluh ribu',
       'Pastikan mikrofon mendapat izin akses'
     ],
-    manualInputTipsTitle: 'Input Manual:',
+    manualInputTipsTitle: 'Input Manual',
     manualInputTipsList: [
       'Masukkan nama produk dan harga',
-      'Harga dalam format angka (contoh: 55000)',
-      'Tekan "Tambah ke Keranjang" untuk menyimpan',
+      'Harga dalam format angka seperti 55000',
+      'Tekan Tambah ke Keranjang untuk menyimpan',
       'Bisa digunakan sebagai backup voice input'
     ]
   },
@@ -146,7 +146,7 @@ export const translations = {
 
     // Hero section
     title: 'Control Your Shopping Budget With ',
-    subtitle: 'VoiceCart is a lightweight web-based solution that helps you track shopping expenses in real-time using just your voice—no installation, no login, no manual input required.',
+    subtitle: 'VoiceCart is a lightweight web-based solution that helps you track shopping expenses in real-time using just your voice. No installation, no login, no manual input required.',
     tryDemoNow: 'Try Demo Now',
     learnMore: 'Learn More',
 
@@ -157,11 +157,11 @@ export const translations = {
     featureCards: {
       voiceRecognition: {
         title: 'Voice Recognition',
-        description: 'Optimized voice recognition system tailored specifically for shopping contexts with structure recognition: "Product Name, Price".'
+        description: 'Advanced voice recognition system specifically optimized for shopping contexts with intuitive product and price detection.'
       },
       smartFiltering: {
         title: 'Smart Filtering',
-        description: 'Intelligent filters and regex patterns automatically separate words and numbers with minimal error, even in noisy environments.'
+        description: 'Intelligent algorithms automatically separate product names and prices with high accuracy, even in noisy environments.'
       },
       realTimeBudget: {
         title: 'Real-time Budget Tracking',
@@ -169,64 +169,64 @@ export const translations = {
       },
       noiseReduction: {
         title: 'Noise Reduction',
-        description: 'Advanced algorithms filter out background noise for better accuracy in busy shopping environments.'
+        description: 'Advanced algorithms filter out background noise for better recognition accuracy in busy shopping environments.'
       },
       noInstallation: {
         title: 'No Installation Required',
-        description: 'Works directly in your browser - no app downloads, no sign-ups, and no personal data stored.'
+        description: 'Works directly in your browser with no app downloads, no sign-ups, and no personal data stored.'
       },
       listExport: {
         title: 'Shopping List Export',
-        description: 'Save and share your shopping list and totals with others via simple link sharing.'
+        description: 'Save and share your shopping list and totals with others through simple link sharing.'
       }
     },
 
     voiceInputTips: {
       title: 'Voice Input Tips',
       tips: [
-        'Speak clearly with the format: "Product Name, Price"',
+        'Speak clearly with product name followed by price',
         'Use a decent microphone for better recognition accuracy',
-        'Pause briefly between each item for better recognition'
+        'Pause briefly between each item for optimal recognition'
       ]
     },
 
     // Background section
     backgroundTitle: 'Background',
-    ourWhyTitle: 'Our Why',
+    ourWhyTitle: 'Why VoiceCart',
     backgroundStory: [
-      'In many supermarkets, we\'re used to taking items without knowing exactly how much we\'ll pay. Often, our intention to shop economically ends up going over budget.',
-      'From this concern, VoiceCart was born—not just an app, but a practical solution for everyone who wants to shop with better control.',
-      'Initially, we tried a camera scanning approach. However, there were many technical challenges: from blurry price lists to inconsistent fonts and poorly detected number positions.',
-      'We then found the answer through a voice approach. By simply stating the item name and price, the system instantly recognizes and calculates automatically. Simpler, faster, and more accurate.',
-      'This is a small form of innovation that we hope can be implemented in various shopping places without needing expensive and complicated systems.'
+      'In many supermarkets, we often pick up items without knowing exactly how much we will pay. Too often, our intention to shop economically ends up with budget surprises at checkout.',
+      'From this concern, VoiceCart was born not just as another app, but as a practical solution for everyone who wants to shop with better control.',
+      'Initially we tried a camera scanning approach, but encountered many technical challenges from blurry price labels to inconsistent fonts and difficult number detection.',
+      'We then discovered the solution through voice input. By simply stating the item name and price, the system instantly recognizes and calculates automatically. Simpler, faster, and more accurate.',
+      'This is a simple form of innovation that we hope can be implemented in various shopping places without needing expensive and complicated systems.'
     ],
 
     journey: {
       title: 'The Journey',
-      subtitle: 'Our path to creating VoiceCart wasn\'t straightforward. Here\'s the story behind our innovation.',
+      subtitle: 'Our path to creating VoiceCart was not straightforward. Here is the story behind our innovation.',
       steps: {
         problem: {
           title: 'The Problem',
-          description: 'Shopping without knowing your running total leads to budget surprises at checkout.'
+          description: 'Shopping without knowing your running total often leads to budget surprises at checkout.'
         },
         firstAttempt: {
           title: 'First Attempt',
-          description: 'We tried camera-based scanning, but encountered issues with blurry price tags, inconsistent fonts, and detection challenges.'
+          description: 'We tried camera-based scanning but encountered issues with blurry price tags, inconsistent fonts, and detection challenges.'
         },
         breakthrough: {
           title: 'The Breakthrough',
-          description: 'Voice input emerged as the simpler, more accurate solution - just speak the product and price.'
+          description: 'Voice input emerged as the simpler, more accurate solution. Just speak the product and price.'
         },
         solution: {
           title: 'The Solution',
-          description: 'VoiceCart was born - a simple, accessible way to track shopping expenses in real-time using just your voice.'
+          description: 'VoiceCart was born as a simple, accessible way to track shopping expenses in real-time using just your voice.'
         }
       }
     },
 
     // Demo section
     demoTitle: 'Try VoiceCart',
-    demoSubtitle: 'Experience the ease of recording shopping with VoiceCart\'s voice recognition technology. Just say the product name and price!',
+    demoSubtitle: 'Experience the ease of recording shopping with VoiceCart voice recognition technology. Just say the product name and price.',
     voiceInput: 'Voice Input',
     manualInput: 'Manual Input',
     listening: 'Listening... Say product name and price',
@@ -252,24 +252,24 @@ export const translations = {
     speechError: 'An error occurred during speech recognition',
     manualInputFallback: 'Failed to recognize voice input. Please use manual input.',
     noSpeechDetected: 'No speech detected. Try again...',
-    microphoneError: 'Cannot access microphone. Make sure it\'s connected and permissions are granted.',
+    microphoneError: 'Cannot access microphone. Make sure it is connected and permissions are granted.',
     microphoneDenied: 'Microphone permission denied. Please allow microphone access.',
     networkError: 'Network connection issue. Check your internet connection.',
 
     // Usage Tips
     usageTipsTitle: 'Usage Tips',
-    voiceInputTipsTitle: 'Voice Input:',
+    voiceInputTipsTitle: 'Voice Input',
     voiceInputTipsList: [
       'Speak clearly and unhurriedly',
-      'Format: "[product name] [price in words]"',
-      'Example: "apple fifty thousand"',
+      'Format: product name followed by price in words',
+      'Example: apple fifty thousand',
       'Ensure microphone has access permission'
     ],
-    manualInputTipsTitle: 'Manual Input:',
+    manualInputTipsTitle: 'Manual Input',
     manualInputTipsList: [
       'Enter product name and price',
-      'Price in number format (example: 55000)',
-      'Press "Add to Cart" to save',
+      'Price in number format like 55000',
+      'Press Add to Cart to save',
       'Can be used as voice input backup'
     ]
   }
