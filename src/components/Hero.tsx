@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import type { Language } from '../constants/translations';
-import mainLogo from "/public/images/person-rocket-1.svg";
+import mainLogo from '/public/images/person-rocket-1.svg';
+import GradientText from './GradientTeks';
 
 interface HeroProps {
   t: {
@@ -51,8 +52,11 @@ const Hero: React.FC<HeroProps> = ({ t }) => {
               }`}
             >
               {t.title}
-              <span
-                className={`bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 inline-block transform transition-all duration-1200 ease-out delay-300 ${
+              <GradientText
+                colors={['#60a5fa', '#a855f7', '#06b6d4', '#8b5cf6']}
+                animationSpeed={4}
+                showBorder={false}
+                className={`inline-block transform transition-all duration-1200 ease-out delay-300 ${
                   isLoaded
                     ? 'translate-y-0 opacity-100 scale-100'
                     : 'translate-y-8 opacity-0 scale-90'
@@ -60,7 +64,7 @@ const Hero: React.FC<HeroProps> = ({ t }) => {
               >
                 {' '}
                 VoiceCart
-              </span>
+              </GradientText>
             </h1>
 
             <p
