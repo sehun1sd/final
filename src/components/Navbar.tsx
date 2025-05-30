@@ -10,7 +10,11 @@ interface NavbarProps {
   t: any;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ currentLang, onToggleLanguage, t }) => {
+const Navbar: React.FC<NavbarProps> = ({
+  currentLang,
+  onToggleLanguage,
+  t,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -29,9 +33,9 @@ const Navbar: React.FC<NavbarProps> = ({ currentLang, onToggleLanguage, t }) => 
 
   // Navigation items for GooeyNav
   const navItems = [
-    { label: t.features, href: "#features" },
-    { label: t.ourWhy, href: "#why" },
-    { label: t.demo, href: "#demo" },
+    { label: t.features, href: '#features' },
+    { label: t.ourWhy, href: '#why' },
+    { label: t.demo, href: '#demo' },
   ];
 
   const handleNavClick = (href: string) => {
@@ -74,24 +78,19 @@ const Navbar: React.FC<NavbarProps> = ({ currentLang, onToggleLanguage, t }) => 
                 onItemClick={handleNavClick}
               />
             </div>
-            
-            <LanguageToggle currentLang={currentLang} onToggle={onToggleLanguage} />
-            
-            <button
-              onClick={() =>
-                document
-                  .getElementById('demo')
-                  ?.scrollIntoView({ behavior: 'smooth' })
-              }
-              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-5 py-2 rounded-full font-medium hover:shadow-[0_0_15px_rgba(139,92,246,0.5)] transition-all duration-300"
-            >
-              {t.tryDemo}
-            </button>
+
+            <LanguageToggle
+              currentLang={currentLang}
+              onToggle={onToggleLanguage}
+            />
           </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-4">
-            <LanguageToggle currentLang={currentLang} onToggle={onToggleLanguage} />
+            <LanguageToggle
+              currentLang={currentLang}
+              onToggle={onToggleLanguage}
+            />
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-gray-300 hover:text-white"
@@ -130,17 +129,6 @@ const Navbar: React.FC<NavbarProps> = ({ currentLang, onToggleLanguage, t }) => 
               >
                 {t.demo}
               </a>
-              <button
-                onClick={() => {
-                  document
-                    .getElementById('demo')
-                    ?.scrollIntoView({ behavior: 'smooth' });
-                  setIsOpen(false);
-                }}
-                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-5 py-2 rounded-full font-medium w-full hover:shadow-[0_0_15px_rgba(139,92,246,0.5)] transition-all duration-300"
-              >
-                {t.tryDemo}
-              </button>
             </div>
           </div>
         )}
