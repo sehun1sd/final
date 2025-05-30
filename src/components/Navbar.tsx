@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Mic } from 'lucide-react';
 import LanguageToggle from './LanguageToggle';
-import GooeyNav from './GooeyNav';
+import GooeyNav from './SettingsNav';
 import type { Language } from '../constants/translations';
 
 interface NavbarProps {
