@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Mic } from 'lucide-react';
 import LanguageToggle from './LanguageToggle';
+import GooeyNav from './GooeyNav';
 import type { Language } from '../constants/translations';
 
 interface NavbarProps {
@@ -26,6 +27,20 @@ const Navbar: React.FC<NavbarProps> = ({ currentLang, onToggleLanguage, t }) => 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Navigation items for GooeyNav
+  const navItems = [
+    { label: t.features, href: "#features" },
+    { label: t.ourWhy, href: "#why" },
+    { label: t.demo, href: "#demo" },
+  ];
+
+  const handleNavClick = (href: string) => {
+    const element = document.querySelector(href);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <nav
       className={`fixed w-full z-50 transition-all duration-300 ${
@@ -43,27 +58,25 @@ const Navbar: React.FC<NavbarProps> = ({ currentLang, onToggleLanguage, t }) => 
             </span>
           </div>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation with GooeyNav */}
           <div className="hidden md:flex items-center space-x-8">
-            <a
-              href="#features"
-              className="text-gray-300 hover:text-purple-400 transition-colors"
-            >
-              {t.features}
-            </a>
-            <a
-              href="#why"
-              className="text-gray-300 hover:text-purple-400 transition-colors"
-            >
-              {t.ourWhy}
-            </a>
-            <a
-              href="#demo"
-              className="text-gray-300 hover:text-purple-400 transition-colors"
-            >
-              {t.demo}
-            </a>
+            {/* GooeyNav Container */}
+            <div className="relative h-12 w-auto">
+              <GooeyNav
+                items={navItems}
+                particleCount={12}
+                particleDistances={[70, 8]}
+                particleR={80}
+                initialActiveIndex={0}
+                animationTime={500}
+                timeVariance={200}
+                colors={[1, 2, 3, 1, 2, 3]}
+                onItemClick={handleNavClick}
+              />
+            </div>
+            
             <LanguageToggle currentLang={currentLang} onToggle={onToggleLanguage} />
+            
             <button
               onClick={() =>
                 document
@@ -92,7 +105,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentLang, onToggleLanguage, t }) => 
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation - Keep original for mobile */}
         {isOpen && (
           <div className="md:hidden mt-4 py-4 bg-gray-900/95 backdrop-blur-md rounded-lg">
             <div className="flex flex-col space-y-4 px-4">
