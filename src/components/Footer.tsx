@@ -48,12 +48,12 @@ const Footer: React.FC = () => {
             <ul className="space-y-2">
               <li className="text-gray-400">
                 <a href="mailto:hello@voicecart.app" className="hover:text-purple-400 transition-colors">
-                  hello@voicecart.app
+                  mochammad.sechan_ti23@nusaputra.ac.id
                 </a>
               </li>
               <li className="text-gray-400">
                 <a href="tel:+1234567890" className="hover:text-purple-400 transition-colors">
-                  +123 456 7890
+                  +62 857 1802 0396
                 </a>
               </li>
             </ul>
